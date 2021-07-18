@@ -1,0 +1,22 @@
+curl --location --request POST 'http://localhost:3000/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstName": "Test Aayush 1",
+    "lastName": "Agarwal",
+    "email": "testaayush1aggarwal@gmail.com",
+    "password":"password"
+}'
+
+curl --location --request POST 'http://localhost:3000/chatLogs/60f43da762d5f45c34955e17' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "message": "Testing message",
+    "isSent": "true",
+    "createdAt":"1626591781922"
+}'
+
+curl --location --request GET 'http://localhost:3000/chatLogs/60f43da762d5f45c34955e17'
+
+curl --location --request DELETE 'http://localhost:3000/chatLogs/60f43b30da9ec1593a062df3'
+
+curl --location --request DELETE 'http://localhost:3000/chatLogs/60f43b30da9ec1593a062df3/60f43f2ce3d9b85d8bfd9532'
