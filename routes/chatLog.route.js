@@ -37,6 +37,7 @@ router.get('/:userId', (req, res) => {
       ChatLog.find({user : ObjectId(req.params.userId)})
       .skip(skip)
       .limit(limit)
+      .sort({_id: -1})
       .lean()
       .exec((err, chatRes) => {
         if(err) {
