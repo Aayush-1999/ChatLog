@@ -3,8 +3,6 @@ const async = require('async'),
      ObjectId = mongoose.Types.ObjectId,
      utils  = require("../utils/function");
 
-
-
 module.exports = function (data, userId) {
   return new Promise((resolve, reject) => {
     let errObj = {}, dataObj = {};

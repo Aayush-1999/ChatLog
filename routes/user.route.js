@@ -3,7 +3,7 @@ const express = require("express"),
       bcrypt  = require("bcryptjs"),
       utils   = require("../utils/function");
       
-const { User }    = require("../models");
+const { User, UserSession }    = require("../models");
 
 //REGISTER ROUTE
 router.post("/register", async (req, res) => {
@@ -27,5 +27,21 @@ router.post("/register", async (req, res) => {
     return res.send(utils.responseError("Registration Unsuccessful", 502));
   }
 });
+
+router.post("/create/session", async (req, res) => {
+  try {
+    let userId = req.body.userId;
+    const userToken = `${userId}2324xzjzniznzcn2455`;
+    const body = {
+      user: userId,
+      token: userToken
+    }
+    const userSession = await UserSession.create(body);
+    return res.send(utils.createSuccessResponse(userSession));
+  }
+  catch (err) {
+    return res.send(utils.responseError("Request Failure", 502));
+  }
+})
 
 module.exports = router;

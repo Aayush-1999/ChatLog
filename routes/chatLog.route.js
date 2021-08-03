@@ -3,10 +3,12 @@ const express = require("express"),
       mongoose = require("mongoose"),
       ObjectId = mongoose.Types.ObjectId,
       ChatLogValidator = require("../validators/chatLog.validator"),
-      utils    = require("../utils/function");
+      utils    = require("../utils/function"),
+      middleware = require("../middlewares/authentication");
 
 const { ChatLog } = require("../models");
 
+// Create Chat log
 router.post('/:userId', async (req, res) => {
   try {
     ChatLogValidator(req.body, req.params.userId)
@@ -29,12 +31,13 @@ router.post('/:userId', async (req, res) => {
   }
 });
 
-router.get('/:userId', (req, res) => {
+// Get chat logs of a user
+router.get('/:userId', middleware.verifyUser, (req, res) => {
   try {
-    if(utils.isValidObjectId(req.params.userId)) {
-      let skip = req.query.skip || 0;
-      let limit = req.query.limit || 10;
-      ChatLog.find({user : ObjectId(req.params.userId)})
+    if(utils.isValidObjectId(req.params.userId) && req.params.userId == req.session.user) {
+      let skip = parseInt(req.query.skip) || 0;
+      let limit = parseInt(req.query.limit) || 10;
+      ChatLog.find({user : ObjectId(req.params.userId)}).skip() 
       .skip(skip)
       .limit(limit)
       .sort({_id: -1})
@@ -60,7 +63,9 @@ router.get('/:userId', (req, res) => {
   }
 });
 
-router.delete('/:userId', (req, res) => {
+
+// Delete chat logs of a user
+router.delete('/:userId', middleware.verifyUser, (req, res) => {
   try {
     if(utils.isValidObjectId(req.params.userId)) {
       ChatLog.find({user: ObjectId(req.params.userId)}, (err, chatLog) => {
@@ -91,7 +96,8 @@ router.delete('/:userId', (req, res) => {
   }
 });
 
-router.delete('/:userId/:msgId', (req, res) => {
+// Delete chat logs by message Id
+router.delete('/:userId/:msgId', middleware.verifyUser, (req, res) => {
   try {
     if(utils.isValidObjectId(req.params.userId)) {
       if(utils.isValidObjectId(req.params.msgId)) {
